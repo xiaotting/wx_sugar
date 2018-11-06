@@ -1,0 +1,177 @@
+<template>
+    <view class="searchView">
+        <view class="searchTop">
+            <span @tap="back"></span>
+            <span>
+                <icon type="search" size="15"></icon><input type="text"/>
+            </span>
+            <span>搜索</span>
+        </view>
+        <view class="defBox">
+            <view class="record">
+                <span>
+                    <text>历史搜索</text>
+                    <icon type="clear" size="15"></icon>
+                </span>
+                <ul>
+                    <li wx:for="{{[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}}" wx:key="index">马尔代夫</li>
+                </ul>
+            </view>
+            <view class="recommon">
+                <text>热门搜索</text>
+                <ul>
+                    <li wx:for="{{[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]}}" wx:key="index">北京出发贾尼岛</li>
+                </ul>
+            </view>
+            <view class="more">更多目的地</view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class SearchView extends wepy.component {
+        components = {}
+
+        data = {}
+
+        computed = {}
+
+        methods = {
+            back(){
+                this.$emit('back')
+            }
+        }
+
+        events = {
+
+        }
+
+        onLoad() {
+
+        }
+    }
+</script>
+<style lang="less" scoped>
+.searchView{
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background: #eee;
+    z-index: 999;
+    overflow: auto;
+    .searchTop{
+        display: flex;
+        background: #fff;
+        justify-content: space-between;
+        width:100%;
+        align-items:center ;
+        height: 80rpx;
+        padding:0 20rpx;
+        box-sizing: border-box;
+        border-bottom:1px solid #e6e6e6;
+        span{
+            display: flex;
+            box-sizing: inherit;
+            &:first-child{
+                position: relative;
+                width: 60rpx;
+                height: 80rpx;
+                &:after{
+                    position: absolute;
+                    top:30rpx;
+                    content: '';
+                    height: 20rpx;
+                    width:20rpx;
+                    border-left: 4rpx solid #999;
+                    /*border-right: 4rpx solid transparent;*/
+                    border-top: 4rpx solid #999;
+                    transform: rotate(-45deg);
+                    margin: 0 20rpx;
+                }
+            }
+            &:nth-child(2){
+                flex: 1;
+                border-radius: 5rpx;
+                background: #eee;
+                border: 1px solid #eee;
+                align-items: center;
+                padding:0 10rpx;
+            }
+            &:last-child{
+                margin-left: 30rpx;
+                font-size: 30rpx;
+            }
+        }
+    }
+    .defBox{
+        width: 100%;
+        box-sizing: border-box;
+        .record{
+            background: #fff;
+            padding: 0 20rpx 20rpx 30rpx;
+            box-sizing: inherit;
+            border-bottom: 1px solid #e6e6e6;
+            font-size: 30rpx;
+            span{
+                height: 80rpx;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color:#696969;
+            }
+            ul{
+                display: flex;
+                flex-wrap: wrap;
+                li{
+                    border: 1px solid #ccc;
+                    padding:10rpx 40rpx;
+                    border-radius: 5rpx;
+                    color:#999;
+                    margin-right: 20rpx;
+                    margin-bottom: 20rpx;
+                }
+            }
+        }
+        .recommon{
+            padding:20rpx 20rpx;
+            font-size: 30rpx;
+            box-sizing: border-box;
+            color:#696969;
+            ul{
+                margin-top: 20rpx;
+                display: flex;
+                flex-wrap: wrap;
+                width:100%;
+                box-sizing: inherit;
+                li{
+                    box-sizing: inherit;
+                    border-radius: 10rpx;
+                    width: 30%;
+                    padding:10rpx;
+                    vertical-align: center;
+                    border: 1px solid #ccc;
+                    color:#999;
+                    margin-right: 20rpx;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    margin-bottom: 20rpx;
+                    background:#fff;
+                }
+            }
+        }
+        .more{
+            width: 100%;
+            height: 80rpx;
+            line-height: 80rpx;
+            font-size: 30rpx;
+            color:#379bed;
+            text-align: center;
+        }
+    }
+}
+</style>

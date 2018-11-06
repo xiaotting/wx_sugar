@@ -1,0 +1,65 @@
+<template>
+    <view>
+        <datepicker :options="pcikerOptions" wx:if="{{pcikerOptions.show}}">
+
+        </datepicker>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    import datepicker from '@@/datepicker'
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const hours = date.getHours() < 10 ? '0' + date.getHours():date.getHours() + ''
+
+    const minute = date.getMinutes() + ''
+    const baseValue = [year,month,day,hours,minute]
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: 'test'
+        }
+        components = {
+            datepicker
+        }
+
+        data = {
+            pcikerOptions:{
+                show:true,
+                value:baseValue,
+                minYear:2008,
+                maxYear:2020
+            },
+
+        }
+
+        computed = {
+
+        }
+
+        methods = {
+
+        }
+
+        events = {
+            submit(res,type){
+                this.pcikerOptions.show = false
+                console.log(res)
+                console.log(type)
+            },
+            cancel(){
+                this.pcikerOptions.show = false
+                console.log()
+            }
+        }
+
+        onLoad() {
+
+        }
+    }
+</script>
+<style lang="less">
+
+</style>

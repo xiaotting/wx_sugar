@@ -1,0 +1,285 @@
+<template>
+    <view class="mypicker">
+        <view class="mask"></view>
+        <view class="main_box">
+            <view class="picker_head">
+                <span @tap="cancel">取消</span>
+                <span @tap="submit">确定</span>
+            </view>
+            <view class="picker_title">
+                <text  wx:for="{{pickTitle}}" wx:key="index">{{item}}</text>
+            </view>
+            <view class="picker_main">
+                <picker-view class="picker_content" indicator-class="pickerItem" value="{{originValue}}" @change="bindchange">
+                    <picker-view-column wx:if="_options.type === 'default'" wx:for="{{list}}" wx:key="index" wx:for-item="dataitem">
+                        <view class="pickerItem" wx:for="{{dataitem}}" wx:key="item[_options.key]" wx:for-item="item">
+                            {{item[_options.label]}}
+                        </view>
+                    </picker-view-column>
+                </picker-view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    /*      datepicker 插件使用说明
+        *   类型：1、年月日  2、年月日时分 3、时分
+        *   默认显示 ：当前年月日时分
+        *
+        *   参数 options：{
+        *       value：[],默认值 key
+        *       type:String  类型 date:'年-月-日'  time:'时-分' default:'年-月-日-时-分'
+        *       minYear:Number  最小年份
+        *       maxYear:Number  最大年份
+        *       minMonth:Number 最小月份
+        *       maxMonth:Number 最大月份
+        *   }
+        *  事件 @submit  确定
+        *      @cancel  取消
+        *
+        *   list:[[{id:'',label:''}]]
+
+        * */
+    import wepy from 'wepy'
+    export default class DatePicker extends wepy.component {
+        config = {
+            navigationBarTitleText: "DatePicker"
+        }
+        props = {
+            options: {
+                type: Object
+            }
+        }
+        components = {}
+        data = {
+            originValue: [],
+            value: [],
+            value1:[],
+            list: [],
+            submitVal: [],   //向外提交的数据
+            pickTitle:['年','月','日','时','分'],
+            /* key 是默认唯一标识字段, label 是默认显示的字段 */
+            _options: {
+                key: 'id',
+                label: 'label',
+                type: 'default',
+                minYear:2000,     //最小年份
+                maxYear:2020,     //最大年份
+                minMonth:1,       //最小月份
+                maxMonth:12,      //最大月份
+            }
+        }
+
+        computed = {}
+
+        methods = {
+            // 向外分发确定事件
+            submit() {
+                this.submitVal = this.originValue
+                let res = this.getValueArr(this.originValue)
+                if (res.length === 0) {
+                    res = [this.list[0][0]]
+                }
+                this.$emit('submit', res, this._options.type)
+            },
+            cancel() {
+                if (this.originValue.length > 1) {
+                    let arr = this.getValueArr(this.originValue)
+                    this.resetDays(arr[0].label, this.value[1])
+                }
+                this.$emit('cancel', '')
+            },
+            bindchange(e){
+                this.originValue = e.detail.value
+                if (this.originValue.length > 1) {
+                    let arr = this.getValueArr(this.originValue)
+                    this.resetDays(arr[0].label, arr[1].label)
+                }
+            }
+        }
+
+        events = {}
+        /* 通过标识 key 取索引 当前高亮数据*/
+        getIndexArr(keyArr) {
+            let res = []
+            this.resetDays(keyArr[0], keyArr[1],'init')
+            // this.resetEndRange(keyArr[0])
+            if (this.list.length > 0) {
+                keyArr.forEach((v, i) => {
+                    this.list[i].some((item, index) => {
+                        if (item[this._options.key] === v) {
+                            res.push(index)
+                            return true
+                        }
+                    })
+                })
+            }
+            return res
+        }
+        /* 重新计算天数的可选范围 */
+        resetDays(year, month) {
+            if (this._options.type === 'date' || this._options.type === 'default') {
+                    let date = new Date(year + '/' + month + '/1')
+                    date.setMonth(month)
+                    date.setDate(0)
+                    let count = date.getDate()
+                    this.list[1] = this.getRange(this._options.minMonth, this._options.maxMonth)
+                    this.list[2] = this.getRange(1, count)
+                    this.$apply()
+            }
+        }
+        /* 获取一个区间内的自增数组 构造年月日数组*/
+        getRange(start, end) {
+            let res = []
+            if (!end) {
+                end = (new Date()).getFullYear() + 1
+            }
+            for (let i = start; i <= end; i++) {
+                res.push({
+                    id: i,
+                    label: i
+                })
+            }
+            return res
+        }
+        /* 获取时间段内的time数组 构造时分数组*/
+        getTimeRange(start, end, isEnd) {
+            let res = []
+            for (let i = start; i <= end; i++) {
+                let val = this.countToTime(i)
+                res.push({
+                    id: val,
+                    label: val
+                })
+            }
+            if (this._options.value[1] === 0 && isEnd) {
+                this._options.value[1] = res[0].id
+            }
+            return res
+        }
+        countToTime(count) {
+            count < 10 && ( count = '0' + count)
+            return count + ''
+        }
+        /* 通过索引取item */
+        getValueArr(indexArr) {
+            let res = []
+            indexArr.forEach((v, i) => {
+                res.push(this.list[i][v])
+            })
+            return res
+        }
+        /* 初始化数据  */
+        init(data, opt) {
+            this._options = Object.assign({}, this._options, opt, this.options)
+            /* 如果是 type = date 改变 datalist 数据 */
+            if (this._options.type === 'date') {
+                /---------------年月日---------------/
+                this.pickTitle = ['年','月','日']
+                this.list[0] = this.getRange(this._options.minYear,this._options.maxYear)
+                this.list[1] = this.getRange(this._options.minMonth, this._options.maxMonth)
+                this.list[2] = this.getRange(new Date().getDate(), 31)
+            } else if (this._options.type === 'time') {
+                /------------时分------------------/
+                this.pickTitle = ['时','分']
+                this.list[0] = this.getTimeRange(0, 23)
+                this.list[1] = this.getTimeRange(0, 59, true)
+                this.$apply()
+            } else if(this._options.type === 'default'){
+                / ----------默认年月日时分------------/
+                this.list[0] = this.getRange(this._options.minYear,this._options.maxYear)
+                this.list[1] = this.getRange(this._options.minMonth, this._options.maxMonth)
+                this.list[2] = this.getRange(new Date().getDate(), 31)
+                this.list[3] = this.getTimeRange(0, 23)
+                this.list[4] = this.getTimeRange(0, 59, true)
+            }else {
+                /*  数据再次渲染时，取最新的数据 */
+                if (data) {
+                    this.list = data
+                } else {
+                    this.list = this.datalist
+                }
+            }
+            /* 赋初始值 弹出框初始值[]*/
+            this.originValue = this.getIndexArr(this._options.value)
+            console.log(this.list)
+            this.$apply()
+        }
+        onLoad() {
+            this.init()
+        }
+    }
+</script>
+<style lang="less" scoped>
+    .mypicker {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        overflow: hidden;
+        .main_box {
+            /*height: 38%;*/
+            max-height: 45%;
+        }
+    }
+    //picker 选择器样式
+    .picker_head {
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        color: #418fff;
+        font-size: 28rpx;
+        padding: 0 32rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        border-bottom: 1rpx solid #eee;
+    }
+    .main_box {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 50%;
+        height: 450rpx;
+        z-index: 10;
+    }
+    .picker_content{
+        height: 370rpx;
+        background-color: #fff;
+    }
+    .pickerItem{
+        height: 80rpx;
+        line-height: 80rpx;
+        font-size: 30rpx;
+        text-align: center;
+        width: 100%;
+    }
+    .mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        z-index: 0;
+    }
+    .picker_title{
+        padding: 20rpx 0;
+        display: flex;
+        background-color:#fff;
+        font-size: 30rpx;
+        text{
+            flex:1;
+            text-align: center;
+        }
+    }
+    .list-foot{
+        margin: 20rpx;
+        text-align: center;
+        font-size: 22rpx;
+        color: #929292;
+    }
+</style>

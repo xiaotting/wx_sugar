@@ -1,0 +1,525 @@
+<template>
+  <view class="home_container">
+    <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"  style="height: {{view.height}}px">
+      <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+        <swiper-item class="swiperItem">
+          <image src="{{item}}" class="swiperImg" mode="widthFix" @load="resetImg"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="searchTab">
+        <span>深圳</span>
+        <span @tap="openSearchTap">
+          <icon type="search" size="15"></icon>
+          <input type="text" placeholder="请输入目的地"/>
+        </span>
+        <span></span>
+    </view>
+    <view class="navWrap">
+      <view wx:for = "{{navBox}}" wx:key="index" class="navBox">
+        <image src="{{item.imgUrl}}" alt="" mode="widthFix"></image>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+    <view class="tips_wrap">
+      <view class="tips_tit">
+        <image src="https://pic.qtour.com/m/qulvindex/images/hot.png" alt="" mode="widthFix"></image>
+      </view>
+      <view class="tips_txt">
+        <swiper autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true">
+          <block wx:for="{{tipsUrl}}" wx:key="{{index}}">
+            <swiper-item class="tips_swiper_item">
+              <a href="{{item.url}}">{{item.text}}</a>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view>
+    </view>
+    <view class="limited_wrap">
+      <view class="big_title">
+        <image src="https://upload.qtour.com/MContent/mindex/images/title/title01.png" mode="widthFix"></image>
+      </view>
+      <swiper autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" class="limited_swiper">
+        <block wx:for="{{limitedList}}" wx:key="{{index}}" wx:for-item="item">
+          <swiper-item>
+            <view class="limited_item">
+              <view wx:for="{{item.list}}" wx:for-item="item1" class="limited_card" wx:key="index">
+                <text>{{item1.name}}</text>
+                <view class="limited_img">
+                  <image src="{{item1.imgUrl}}" mode="widthFix"></image>
+                </view>
+                <text class="text">¥{{item1.price}}</text>
+              </view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="dealsList">
+        <a href="https://m.qulv.com/topic/maldivesmade">
+          <image lazy="y" src="https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/09/20180905153842811_64.jpg" alt="" mode="widthFix"></image>
+        </a>
+        <a href="https://m.qulv.com/topic/maldivesmade">
+          <image lazy="y" src="https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/08/20180830165257171_57.png" alt="" mode="widthFix"></image>
+        </a>
+        <a href="https://m.qulv.com/topic/maldivesmade">
+          <image lazy="y" src="https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-07/20170712151457774_10.png" alt="" mode="widthFix"></image>
+        </a>
+      </view>
+    </view>
+    <view class="wonderful_wrap">
+        <view class="big_title">
+            <image src="https://upload.qtour.com/MContent/mindex/images/title/title02.png" mode="widthFix"></image>
+          </view>
+        <view class="wonderful_list">
+            <a wx:for="{{wonderfulList}}" class="wonderful_item" wx:key="{{index}}">
+              <image src="{{item.imgUrl}}" mode="widthFix"></image>
+              <text>{{item.text}}</text>
+            </a>
+          </view>
+        <view class="guideList">
+              <a href=""><image src="https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-07/20170712151256145_107.png" mode="widthFix"></image></a>
+              <a href=""><image src="https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-07/20170712155145251_79.png" mode="widthFix"></image></a>
+          </view>
+        <view class="adImg">
+            <a href=""><image src="https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-12/20171226155050605_15.jpg"></image></a>
+        </view>
+    </view>
+    <view class="recommended_wrap">
+          <view class="big_title">
+              <image src="https://upload.qtour.com/MContent/mindex/images/title/title03.png" mode="widthFix"></image>
+          </view>
+          <view class="img_box" wx:for = "{{recommendedList}}" wx:key="index">
+              <view class="img_content">
+                <image src="{{item.imgUrl}}" mode="widthFix"></image>
+              </view>
+              <text class="img_text">{{item.text}}</text>
+              <span class="img_price">¥ {{item.price}} 起</span>
+          </view>
+     </view>
+    <view class="topTag" @tap="scrollToTop" wx:if="{{backTopValue}}"></view>
+    <SearchView
+            wx:if="{{openSearch}}"
+    ></SearchView>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import SearchView from '@@/searchview'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页'
+    }
+    components = {
+        SearchView,
+    }
+    data = {
+      text:'目的地',
+      imgUrls:[
+        'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/10/20181024110957581_24.jpg',
+        'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/07/20180709154642605_31.jpg',
+        'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-04/20180426101649578_93.jpg',
+        'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-03/20180319145401679_51.jpg',
+        'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-04/20180426101701078_82.jpg'
+      ],
+      navBox:[
+        {name:'马尔代夫',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135118207_87.png'},
+        {name:'毛里求斯',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135135004_105.png'},
+        {name:'斯里兰卡',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135304600_70.png'},
+        {name:'塞班',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135235427_51.png'},
+        {name:'巴厘岛',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-06/20170629093908502_37.png'},
+        {name:'泰国',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135318178_20.png'},
+        {name:'芽庄',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-12/20171215160459181_24.png'},
+        {name:'沙巴',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135248084_85.png'},
+        {name:'邮轮',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-12/20171215160509603_52.png'},
+        {name:'全部海岛',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135205333_17.png'},
+      ],
+      tipsUrl:[
+        {text:'新注册用户，免费赠送“100元”优惠券',url:''},
+        {text:'世界，看你的！（万金悬赏-游记征集）',url:'https://m.qulv.com/Travel/TravelInfo/da2a66bd-7a36-46e5-ad5f-9629ca673d86'},
+      ],
+      limitedList:[
+          {
+            list:[
+              {name:'马尔代夫',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/10/20181024174650628_29.jpg',price:'12025'},
+              {name:'塞班',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-05/20180508160214065_29.jpg',price:'12025'},
+              {name:'毛里求斯',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-02/20180222112534844_54.jpg',price:'12025'},
+              {name:'斯里兰卡',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-05/20180508171135506_56.jpg',price:'12025'}
+            ]
+          },
+        {
+          list:[
+            {name:'芽庄',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-06/20180605205622979_34.png',price:'12025'},
+            {name:'岘港',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/07/20180713095303480_108.jpg',price:'12025'},
+            {name:'巴厘岛',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/08/20180817150603165_107.jpg',price:'12025'},
+            {name:'斐济',imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/07/20180719093122183_53.png',price:'12025'}
+          ]
+        }
+      ],
+      wonderfulList:[
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135534807_55.png',text:'海艇会'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135604558_70.png',text:'潜水海钓'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135549479_58.png',text:'婚礼摄影'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135519557_57.png',text:'定制游'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135504056_97.png',text:'当地玩乐'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135623933_69.png',text:'签证办理'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135657684_55.png',text:'租车包车'},
+        {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170502135642293_43.png',text:'出境WIFI'}
+
+      ],
+      recommendedList:[
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/06/20180628153110065_47.jpg',text:'【全国出发】马尔代夫夏日岛 6天4晚自由行（蜜月度假 私密岛屿 优质SPA）',price:'7748'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/06/20180628152621888_12.jpg',text:'【全国出发】马尔代夫蓝色美人蕉岛7天5晚自由行 浮潜小岛，性价比高，原生态设计',price:'10475'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/06/20180628153812314_72.jpg',text:'【全国出发】马尔代夫伊露岛 7天5晚自由行（15岁以下儿童免食宿）',price:'15072'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/10/20181019152622365_65.png',text:'【全国出发】马尔代夫柏悅哈达哈岛7天5晚自由行 珊瑚丰富 浮潜A级 顶级SPA',price:'2999'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/07/20180704114835817_92.jpg',text:'【上海直飞】毛里求斯瑞吉酒店8天5晚自由行（含早晚餐+中文管家服务）',price:'14480'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-05/20180510155927346_69.jpg',text:'【深起港止】迪拜6天4晚跟团游 五星航空，沙漠冲沙（全程5星酒店）',price:'2299'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/06/20180612174324240_60.jpg',text:'【最芽庄】深圳直飞4天3晚休闲游',price:'2999'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-05/20180509163336514_80.jpg',text:'【最岘港】香港直飞-岘港5天4晚游>四星五星酒店休闲游',price:'2599'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-05/20180509145104616_18.jpg',text:'【香港直飞】毛里求斯长滩酒店8天6晚自由行（豪华五星  适合情侣、家庭度假）',price:'9780'},
+          {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-11/20171117165615683_88.jpg',text:'【广州直飞】<塞班岛5天4晚游>北部环岛+军舰岛+1个市区午餐【ZZ】',price:'3880'}
+      ],
+      autoplay:true,
+      interval:5000,
+      duration:1000,
+      indicatorDots:true,
+      view:{
+        height:150
+      },
+      imageHeight:0,
+      openSearch:false,
+        backTopValue:false
+    }
+
+    computed = {
+    }
+
+    methods = {
+      resetImg(e){
+        var query = wx.createSelectorQuery()
+        query.select('.swiperImg').boundingClientRect()
+        query.exec((res)=>{
+          this.view.height = res[0].height
+        })
+      },
+      openSearchTap(){
+        this.openSearch = true
+      },
+        scrollToTop(){
+            wx.pageScrollTo({
+                scrollTop: 0
+            })
+        }
+    }
+      onPageScroll(e){
+          var that = this
+          var scrollTop = e.scrollTop
+          var backTopValue = scrollTop > 500 ? true : false
+          that.setData({
+              backTopValue: backTopValue
+          })
+      }
+    events = {
+        'back' : ()=>{
+            this.openSearch = false
+        }
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>
+<style lang="less" scoped>
+  swiper{
+    height:100%;
+  }
+  .swiperItem{
+    width:100%;
+    .swiperImg{
+      width:100% ;
+      height: 100%;
+    }
+  }
+  .navWrap{
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding:0 10rpx 20rpx 10rpx;
+    .navBox{
+      padding-top:10rpx;
+      height:100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      image{
+        width: 140rpx;
+        height: 140rpx;
+      }
+      text{
+        font-size: 20rpx;
+      }
+    }
+  }
+  .tips_wrap{
+    display: flex;
+    height:100rpx;
+    border-top:1rpx solid #e5e5e5;
+    align-items: center;
+    padding:0 20rpx;
+    .tips_tit{
+      height: 60rpx;
+      width:30%;
+      display: flex;
+      align-items: center;
+      image{
+        width: 100%;
+      }
+    }
+    .tips_txt{
+      margin-left: 20rpx;
+      height: 100%;
+      flex: 1;
+      font-size: 26rpx;
+      .tips_swiper_item{
+        display: flex;
+        align-items: center;
+      }
+    }
+
+  }
+  .big_title{
+    height:80rpx;
+    line-height: 80rpx;
+    text-align: center;
+    background: #eee;
+    image{
+      width: 30%;
+    }
+  }
+  .limited_wrap{
+    background: #eee;
+  }
+  .limited_swiper{
+    background: #fff;
+    height:300rpx;
+    .limited_item{
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      height: 100%;
+      .limited_card{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        width:170rpx;
+        padding: 20rpx;
+        border-right: 1px solid #eee;
+        font-size: 30rpx;
+        .limited_img{
+          width: 100%;
+          margin: 20rpx 0;
+          image{
+            width:100%;
+            height: 100%;
+          }
+        }
+        .text{
+          color:#ef786e
+        }
+      }
+    }
+  }
+  .dealsList{
+    margin-top: 40rpx;
+    height: 300rpx;
+    display: flex;
+    a{
+      width:33%;
+      border-right: 1px solid #eee;
+      image{
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+  .wonderful_wrap{
+      background: #eee;
+    .wonderful_list{
+        background: #fff;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      .wonderful_item{
+        padding-top:10rpx;
+        height:100rpx;
+        display: flex;
+        width:calc((100% - 4px)/4);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+          &:nth-child(n+5){
+              border-bottom:none
+          }
+        image{
+          width:90rpx;
+        }
+        text{
+          font-size: 20rpx;
+        }
+      }
+    }
+      .guideList{
+          margin-top: 30rpx;
+          display: flex;
+          justify-content: space-between;
+          background: #fff;
+          a{
+              width:50%;
+              border-right: 1px solid #eee;
+              image{
+                  width:100%;
+                  /*height:100%;*/
+              }
+          }
+      }
+      .adImg{
+          height: 200rpx;
+          image{
+              width: 100%;
+              height: 100%;
+          }
+      }
+  }
+  .recommended_wrap{
+        background: #eee;
+        box-sizing: border-box;
+        .img_box{
+            padding:0 10rpx 20rpx 10rpx;
+            box-sizing: border-box;
+            width:100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20rpx;
+            &:last-child{
+                margin-bottom: 0;
+            }
+            .img_content{
+                width:100%;
+                height: 320rpx;
+                overflow: hidden;
+                image{
+                    width:100%;
+                    height: 100%;
+                }
+            }
+            .img_text{
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 30rpx;
+                background: #fff;
+                padding:20rpx;
+            }
+            .img_price{
+                display: block;
+                height:70rpx;
+                width:220rpx;
+                background:#ff5940 ;
+                color:#fff;
+                border-bottom-left-radius: 35rpx;
+                border-top-left-radius: 35rpx;
+                position: absolute;
+                bottom:140rpx;
+                right:10rpx;
+                text-align: center;
+                line-height: 70rpx;
+            }
+        }
+    }
+    .searchTab{
+        height: 60rpx;
+        position:absolute;
+        top:30rpx;
+        display: flex;
+        color:#fff;
+        font-size: 30rpx;
+        width: 100%;
+        box-sizing: border-box;
+        padding:0 20rpx;
+        justify-content: space-between;
+        align-items: center;
+        span{
+            display: flex;
+            &:first-child{
+                position: relative;
+                margin-right: 40rpx;
+                &:after{
+                    position: absolute;
+                    content: '';
+                    border-left: 8rpx solid transparent;
+                    border-right: 8rpx solid transparent;
+                    border-top: 8rpx solid #fff;
+                    vertical-align: 1px;
+                    top:17rpx;
+                    margin-left: 6rpx;
+                }
+            }
+            &:nth-child(2){
+                height: inherit;
+                padding: 10rpx;
+                box-sizing: border-box;
+                background: #fff;
+                border: 1px solid #fff;
+                flex: 1;
+                border-radius: 5rpx;
+                align-items: center;
+            }
+            &:last-child{
+                height:60rpx;
+                width:60rpx;
+                background: url("http://m.qulv.com/images/iconHd.png") no-repeat 10rpx 1rpx;
+                background-size: cover;
+            }
+        }
+    }
+    .topTag{
+        width:60rpx;
+        height:60rpx;
+        border-radius: 100%;
+        background: rgba(0,0,0,0.6);
+        position: fixed;
+        bottom:60rpx;
+        right:30rpx;
+        &:before{
+            content: '';
+            position: absolute;
+            left:48%;
+            bottom:10rpx;
+            height:30rpx;
+            border-left: 2rpx dashed #fff;
+        }
+        &:after{
+            content:'';
+            position:absolute;
+            top:20rpx;
+            left:33%;
+            height: 20rpx;
+            width:20rpx;
+            border:1px solid #fff;
+            border-right: transparent;
+            border-bottom: transparent;
+            transform: rotate(45deg);
+        }
+    }
+</style>

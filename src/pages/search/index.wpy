@@ -1,0 +1,271 @@
+<template>
+    <view class="search">
+        <view class="banner">
+            <swiper indicator-dots="{{indicatorDots}}" interval="{{interval}}" duration="{{duration}}" style="height: 420rpx">
+                <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+                    <swiper-item class="swiperItem">
+                        <view class="swiperContent">
+                            <view  class="swiperImg" >
+                                <image src="{{item}}" mode="widthFix"></image>
+                            </view>
+                            <p>
+                                安利巴厘岛旅游
+                            </p>
+                            <span class="playIcon">
+                                <image src="http://m.qulv.com/video/images/play-icon-big.png?__sprite" mode="widthFix" ></image>
+                            </span>
+                        </view>
+                    </swiper-item>
+                </block>
+            </swiper>
+        </view>
+        <span class="C_title">热门推荐</span>
+        <ul class="hc_list">
+            <li wx:for = "{{hclist}}" wx:key="index">
+                <a href="">
+                    <image src="{{item.imgUrl}}"></image>
+                    <span>{{item.time}}</span>
+                </a>
+                <p>{{item.des}}</p>
+            </li>
+        </ul>
+        <span class="C_title">精彩推荐</span>
+        <ul class="showList">
+            <li  wx:for="{{showList}}" wx:key="{{index}}">
+                <a href="">
+                    <image src="{{item.imgUrl}}"></image>
+                    <span class="playIcon">
+                         <image src="http://m.qulv.com/video/images/play-icon-big.png?__sprite" mode="widthFix" ></image>
+                    </span>
+                    <span>
+                        <text>{{item.des}}</text>
+                        <text>{{item.time}}</text>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy'
+    export default class Index extends wepy.page {
+        config = {
+            navigationBarTitleText: 'test'
+        }
+        components = {
+
+        }
+
+        data = {
+            imgUrls:[
+                'https://pic.qtour.com/Upload/QulvCom/Video/2016-07/20160722113014184_49.jpg',
+            ],
+            hclist:[
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2016-08/20160830103003671_47.jpg',time:'3:38',des:'马尔代夫-白金岛视频'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2016-08/20160830113536291_82.jpg',time:'3:44',des:'这就是传说中的塞舌尔群岛'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2017-05/20170509165939697_95.jpg',time:'3:38',des:'马尔代夫-白金岛视频'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2016-08/20160830113707466_38.jpg',time:'3:38',des:'毛里求斯—空中俯瞰毛里求斯'},
+            ],
+            showList:[
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/Video/2016-07/20160722113029028_37.jpg',time:'5:26',des:'最专业的旅游宣传片-巴厘岛【高清】'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/Video/2016-07/20160723154025094_36.jpg',time:'1:42',des:'说好的旅行嘞_芽庄夜游篇'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/Video/2016-07/20160722114633631_34.jpg',time:'0:45',des:'明信片上的海岛天堂_泰国苏梅岛四季度假酒店'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/Video/2016-07/20160722120459398_30.jpg',time:'4:27',des:'夏威夷Kauai岛旅游短片'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/Video/2016-08/20160816180828594_58.jpg',time:'4:25',des:'带你玩转潜水国度---马尔代夫班度士岛'},
+                {imgUrl:'https://pic.qtour.com/Upload/QulvCom/Video/2016-09/20160902152658871_10.jpg',time:'3:12',des:'马尔代夫-圣塔拉富士岛风光'},
+            ],
+            autoplay:true,
+            interval:5000,
+            duration:1000,
+            indicatorDots:true,
+            view:{
+                height:150
+            },
+        }
+
+        computed = {
+
+        }
+
+        methods = {
+            resetImg(e){
+                var query = wx.createSelectorQuery()
+                query.select('.swiperImg').boundingClientRect()
+                query.exec((res)=>{
+                    this.view.height = res[0].height
+                })
+            },
+        }
+
+        events = {
+
+        }
+
+        onLoad() {
+
+        }
+    }
+</script>
+<style lang="less" scoped >
+    .search{
+        background: #eee;
+        .swiperItem{
+            width:100%;
+            .swiperContent{
+                width:100%;
+                height:100%;
+                overflow: hidden;
+                position: relative;
+                .swiperImg{
+                    height: 100%;
+                    width: 100%;
+                    image{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                p{
+                    position: absolute;
+                    bottom:0;
+                    width: 100%;
+                    padding-left: 60rpx;
+                    height: 60rpx;
+                    line-height: 60rpx;
+                    color:#fff;
+                    background: rgba(0,0,0,0.6);
+                    font-size:28rpx;
+                }
+            }
+        }
+        .C_title{
+            height: 90rpx;
+            line-height: 90rpx;
+            text-align: center;
+            font-size: 28rpx;
+            color: #f54e00;
+            position: relative;
+            display: block;
+            &:after{
+                position: absolute;
+                content: '';
+                /*border-left: 8rpx solid transparent;*/
+                /*border-right: 8rpx solid transparent;*/
+                border-top: 1rpx solid #f54e00;
+                vertical-align: 1px;
+                top:50%;
+                right:26%;
+                width:90rpx;
+                height: 1rpx;
+                margin-left: 6rpx;
+            }
+            &:before{
+                position: absolute;
+                content: '';
+                /*border-left: 8rpx solid transparent;*/
+                /*border-right: 8rpx solid transparent;*/
+                border-top: 1rpx solid #f54e00;
+                vertical-align: 1px;
+                top:50%;
+                left:25%;
+                width:90rpx;
+                height: 1rpx;
+                margin-left: 6rpx;
+            }
+        }
+        .hc_list{
+            display: flex;
+            flex-wrap: wrap;
+            background: #fff;
+            padding:20rpx;
+            li{
+                margin: 0 20rpx 20rpx 0;
+                width:48%;
+                border-radius: 10rpx;
+                &:nth-child(2n){
+                    margin-right: 0;
+                }
+                a{
+                    height:100%;
+                    width:100%;
+                    position: relative;
+                    border-radius: 10rpx;
+                    image{
+                        width: 100%;
+                        height:200rpx;
+                        border-radius: 10rpx;
+                    }
+                    span{
+                        position: absolute;
+                        display: block;
+                        background: rgba(0,0,0,0.6);
+                        width:90rpx;
+                        height: 40rpx;
+                        line-height: 40rpx;
+                        text-align: center;
+                        font-size: 24rpx;
+                        color:#fff;
+                        top:0;
+                        right:0;
+                        border-bottom-right-radius: 10rpx;
+                    }
+                }
+                p{
+                    padding:0 10rpx;
+                    color:#676767;
+                    width: 100%;
+                    font-size: 28rpx;
+                    display: block;
+                    line-height: 1;
+                }
+            }
+        }
+        .showList{
+            width: 100%;
+            display: block;
+            background: #eee;
+            height: 100%;
+            li{
+                display: inherit;
+                width: inherit;
+                margin-bottom: 10rpx;
+                a{
+                    position: relative;
+                    display: inherit;
+                    width: inherit;
+                    image{
+                        width:inherit;
+                        height:400rpx;
+                    }
+                    span:last-child{
+                        box-sizing: border-box;
+                        display: flex;
+                        padding: 0 20rpx;
+                        justify-content: space-between;
+                        align-items: center;
+                        height:50rpx;
+                        width: inherit;
+                        position: absolute;
+                        bottom: 10rpx;
+                        font-size: 24rpx;
+                        color:#fff;
+                        background: rgba(0,0,0,0.4);
+                    }
+                }
+            }
+        }
+    }
+    .playIcon{
+        position: absolute;
+        bottom:41%;
+        left:43%;
+        width: 100rpx;
+        height: 100rpx;
+        line-height: 60rpx;
+        color:#fff;
+        image{
+            width: 100%;
+            height: 100%;
+        }
+    }
+</style>

@@ -1,0 +1,105 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+        // 'pages/index',
+        'pages/home/index',
+        'pages/bourn/index',
+        'pages/search/index',
+        'pages/myCenter/index',
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+      tabBar:{
+          color: '#929292',
+          selectedColor: '#d4237a',
+          backgroundColor: '#ffffff',
+          borderStyle: 'black',
+          list:[
+              {
+                  pagePath:'pages/home/index',
+                  text:'首页',
+                  iconPath:'image/tabIcon/indexIcon.png',
+                  selectedIconPath:'image/tabIcon/indexIcon_act.png'
+              },
+              {
+                  pagePath:'pages/bourn/index',
+                  text:'目的地',
+                  iconPath:'image/tabIcon/bournIcon.png',
+                  selectedIconPath:'image/tabIcon/bournIcon_act.png'
+              },
+              {
+                  pagePath:'pages/search/index',
+                  text:'发现',
+                  iconPath:'image/tabIcon/searchIcon.png',
+                  selectedIconPath:'image/tabIcon/searchIcon_act.png'
+              },
+              {
+                  pagePath:'pages/myCenter/index',
+                  text:'我的',
+                  iconPath:'image/tabIcon/myIcon.png',
+                  selectedIconPath:'image/tabIcon/myIcon_act.png'
+              }
+          ]
+      }
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+  }
+
+  onLaunch() {
+    this.testAsync()
+  }
+
+  sleep (s) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise resolved')
+      }, s * 1000)
+    })
+  }
+
+  async testAsync () {
+    const data = await this.sleep(3)
+    console.log(data)
+  }
+
+  getUserInfo(cb) {
+    const that = this
+    if (this.globalData.userInfo) {
+      return this.globalData.userInfo
+    }
+    wepy.getUserInfo({
+      success (res) {
+        that.globalData.userInfo = res.userInfo
+        cb && cb(res.userInfo)
+      }
+    })
+  }
+}
+</script>
