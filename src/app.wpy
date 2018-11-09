@@ -1,4 +1,7 @@
 <style lang="less">
+    page{
+        height:100%;
+    }
 .container {
   height: 100%;
   display: flex;
@@ -18,11 +21,14 @@ export default class extends wepy.app {
   config = {
     pages: [
         // 'pages/index',
-        'pages/home/index',
         'pages/bourn/index',
+        'pages/home/index',
         'pages/search/index',
         'pages/myCenter/index',
     ],
+      "subpackages":[
+
+      ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -97,6 +103,7 @@ export default class extends wepy.app {
     wepy.getUserInfo({
       success (res) {
         that.globalData.userInfo = res.userInfo
+          console.log(that.globalData.userInfo)
         cb && cb(res.userInfo)
       }
     })

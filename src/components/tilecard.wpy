@@ -1,0 +1,83 @@
+<template>
+    <view class="css_tileCard">
+        <view wx:for="{{datalist}}" class="cardItem" wx:key="index">
+            <a href="">
+                <image src="{{item.imgUrl}}" ></image>
+            </a>
+            <text>{{item.title}}</text>
+            <text>{{item.des}}</text>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+
+    export default class TileCard extends wepy.component {
+        props = {
+            options:{
+                type:Array
+            }
+        }
+
+        data = {
+            datalist:[]
+        }
+        events = {
+            datachange(list){
+                this.datalist = list
+                this.$apply()
+            }
+        }
+
+        watch = {
+
+        }
+
+        methods = {}
+        onLoad(){
+        }
+    }
+</script>
+<style lang="less" scoped>
+.css_tileCard{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: 30rpx;
+    .cardItem{
+        background: #fff;
+        width: 48%;
+        margin-right: 20rpx;
+        display: flex;
+        flex-direction: column;
+        border-radius: 5rpx;
+        margin-bottom: 20rpx;
+        &:nth-child(2n){
+            margin-right: 0;
+        }
+        a{
+            height:144rpx;
+            width:100%;
+            display: block;
+            image {
+                width:100%;
+                height:100%;
+                border-top-left-radius: 5rpx;
+                border-top-right-radius: 5rpx;
+            }
+
+        }
+        text{
+            padding:10rpx;
+            &:first-child{
+                color:#3c3c3c;
+                font-size: 28rpx;
+            }
+            &:last-child{
+                color:#707070;
+                font-size: 24rpx;
+            }
+        }
+    }
+}
+</style>

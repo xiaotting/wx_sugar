@@ -1,37 +1,56 @@
 <template>
-    <view>
-       <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" >
-           <block wx:for="{{imgUrls}}" wx:key="{{index}}">
-               <swiper-item class="swiperItem">
-                   <image src="{{item}}" class="swiperImg"></image>
-               </swiper-item>
-           </block>
-       </swiper>
+    <view class="bourncontainer">
+        <view class="leftTab">
+            <scroll-view scroll-y style="height: 100%">
+               <view wx:for="{{tabList}}" wx:key="index" class="tabItem {{item.id == curId?'act':''}}" @tap="selectView({{item.id}})">{{item.label}}</view>
+            </scroll-view>
+        </view>
+        <view class="rightContent">
+            <view class="bigTitle">热门岛屿</view>
+            <TileCard></TileCard>
+            <view class="bigTitle">推荐线路</view>
+        </view>
     </view>
 </template>
 
 <script>
     import wepy from 'wepy'
+    import TileCard from '@@/tilecard'
     export default class Index extends wepy.page {
         config = {
             navigationBarTitleText: '目的地'
         }
         components = {
-
+            TileCard
         }
 
         data = {
-            text:'目的地',
-            imgUrls:[
-                'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018/07/20180709154642605_31.jpg',
-                'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-04/20180426101649578_93.jpg',
-                'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-03/20180319145401679_51.jpg',
-                'https://pic.qtour.com/Upload/QulvCom/MobileDetail/2018-04/20180426101701078_82.jpg'
+            tabList:[
+                {label:'热门推荐',id:1},
+                {label:'亚洲海岛',id:2},
+                {label:'日本韩国',id:3},
+                {label:'澳洲非洲',id:4},
+                {label:'欧美海岛',id:5},
             ],
-            autoplay:true,
-            interval:5000,
-            duration:1000,
-          indicatorDots:true
+            List:[
+                [
+                    {id:1,title:'马尔代夫',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160818111119420_40.jpg',des:'散落人间的隔世天堂'},
+                    {id:1,title:'斯里兰卡',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817171920310_100.jpg',des:'微笑古国'},
+                    {id:1,title:'泰国',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817172035312_90.jpg',des:'黄袍佛国'},
+                    {id:1,title:'沙巴',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817171839027_24.jpg',des:'风下之乡'},
+                    {id:1,title:'芽庄',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817172332943_69.jpg',des:'东方小马尔代夫'},
+                    {id:1,title:'岘港',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817172212519_21.jpg',des:'山茶古城 迦南明珠'}
+                ],
+                [
+                    {id:1,title:'斯里兰卡',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817171920310_100.jpg',des:'微笑古国'},
+                    {id:1,title:'泰国',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817172035312_90.jpg',des:'黄袍佛国'},
+                    {id:1,title:'沙巴',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817171839027_24.jpg',des:'风下之乡'},
+                    {id:1,title:'芽庄',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817172332943_69.jpg',des:'东方小马尔代夫'},
+                    {id:1,title:'岘港',imgUrl:'http://pic.qtour.com/Upload/QulvCom/IslandClassModule/2016-08/20160817172212519_21.jpg',des:'山茶古城 迦南明珠'}
+                ],
+            ],
+            selectList:[],
+            curId:1,
         }
 
         computed = {
@@ -39,7 +58,18 @@
         }
 
         methods = {
-
+            getLocation(){
+                wepy.scanCode({
+                    success(res){
+                        console.log(res)
+                    }
+                })
+            },
+            selectView(id){
+                this.curId = id
+                this.selectList = this.List[this.curId -1]
+                this.$broadcast('datachange',this.selectList)
+            }
         }
 
         events = {
@@ -47,11 +77,43 @@
         }
 
         onLoad() {
-
+            this.selectList = this.List[this.curId -1]
+            this.$broadcast('datachange',this.selectList)
         }
     }
 </script>
-<style lang="less">
+<style lang="less" scoped>
+    .bourncontainer{
+        height:100%;
+        background: #eee;
+        display: flex;
+        .leftTab{
+            width:150rpx;
+            background: #fff;
+            height: inherit;
+            font-size: 28rpx;
+            .tabItem{
+                height: 90rpx;
+                line-height: 90rpx;
+                text-align: center;
+                width: 100%;
+                border-bottom: 1rpx solid #eee;
+                &.act{
+                    background: #eee;
+                }
+            }
+        }
+        .rightContent{
+            padding: 0 30rpx;
+            flex:1;
+            .bigTitle{
+                color: #656565;
+                font-size: 26rpx;
+                height: 90rpx;
+                line-height: 90rpx;
+            }
+        }
+    }
 .swiperItem{
     width:100%;
     height: 400rpx;
